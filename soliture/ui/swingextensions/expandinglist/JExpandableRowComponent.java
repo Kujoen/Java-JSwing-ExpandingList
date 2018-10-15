@@ -1,7 +1,5 @@
 package soliture.ui.swingextensions.expandinglist;
 
-import java.awt.GridBagLayout;
-
 import javax.swing.JComponent;
 
 /**

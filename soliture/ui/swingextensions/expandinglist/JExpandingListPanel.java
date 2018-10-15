@@ -1,6 +1,5 @@
 package soliture.ui.swingextensions.expandinglist;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -9,19 +8,17 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
 
 /**
  * 
  * @author Andreas Farley
  *
  */
+@SuppressWarnings("serial")
 public class JExpandingListPanel extends JPanel implements ComponentListener {
 
 	private List<JExpandableRow> rowList;
@@ -67,14 +64,14 @@ public class JExpandingListPanel extends JPanel implements ComponentListener {
 
 		this.rowsPerPanel = rowsPerPanel;
 
-		this.rowList = new ArrayList<JExpandableRow>();
+		this.rowList = new ArrayList<>();
 
 		this.gridBagConstraints = new GridBagConstraints();
-		gridBagConstraints.fill = gridBagConstraints.BOTH;
+		gridBagConstraints.fill = GridBagConstraints.BOTH;
 		gridBagConstraints.gridx = 0;
 		gridBagConstraints.weightx = 1.0;
 		gridBagConstraints.weighty = 1.0;
-		gridBagConstraints.anchor = gridBagConstraints.FIRST_LINE_START;
+		gridBagConstraints.anchor = GridBagConstraints.FIRST_LINE_START;
 
 		this.gridBagLayout = new GridBagLayout();
 
@@ -84,8 +81,8 @@ public class JExpandingListPanel extends JPanel implements ComponentListener {
 		scrollContentPanel.add(listPanel);
 
 		this.scrollPanel = new JScrollPane(scrollContentPanel);
-		scrollPanel.setVerticalScrollBarPolicy(scrollPanel.VERTICAL_SCROLLBAR_ALWAYS);
-		scrollPanel.setHorizontalScrollBarPolicy(scrollPanel.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollPanel.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollPanel.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
 		this.setLayout(new GridLayout(1, 1));
 		this.add(scrollPanel);
@@ -270,7 +267,7 @@ public class JExpandingListPanel extends JPanel implements ComponentListener {
 	public void setInvisibleScrollbar(boolean isInvisibleScrollbar) {
 		this.isInvisibleScrollbar = isInvisibleScrollbar;
 
-		if (isInvisibleScrollbar = true) {
+		if (isInvisibleScrollbar) {
 			scrollPanel.getVerticalScrollBar().setPreferredSize(new Dimension());
 		}
 	}

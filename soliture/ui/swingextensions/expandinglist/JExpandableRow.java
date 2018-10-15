@@ -1,22 +1,13 @@
 package soliture.ui.swingextensions.expandinglist;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-
 /**
  * 
  * @author Andreas Farley
@@ -25,13 +16,13 @@ import javax.swing.JPanel;
 public class JExpandableRow extends JPanel {
 
 	// A row has a parent, this can either be another row or the JExpandingListPanel
-	private Object listParent;
+	private transient Object listParent;
 
 	// A row can hold other rows
 	private List<JExpandableRow> rowList;
 
 	// The components of a row are stored in an array
-	private JExpandableRowComponent[] componentArray;
+	private transient JExpandableRowComponent[] componentArray;
 
 	private boolean isExpanded;
 	private boolean isForceEqualSizes = true;
@@ -57,14 +48,14 @@ public class JExpandableRow extends JPanel {
 		this.gridBagConstraints = new GridBagConstraints();
 		gridBagConstraints.weightx = 1.0;
 		gridBagConstraints.weighty = 1.0;
-		gridBagConstraints.fill = gridBagConstraints.BOTH;
-		gridBagConstraints.anchor = gridBagConstraints.FIRST_LINE_START;
+		gridBagConstraints.fill = GridBagConstraints.BOTH;
+		gridBagConstraints.anchor = GridBagConstraints.FIRST_LINE_START;
 
 		this.gridBagLayout = new GridBagLayout();
 		this.setLayout(gridBagLayout);
 
 		this.columnsInRow = columnsInRow;
-		this.rowList = new ArrayList<JExpandableRow>();
+		this.rowList = new ArrayList<>();
 
 		// Initialize the component array with empty labels
 		componentArray = new JExpandableRowComponent[columnsInRow];
@@ -130,12 +121,12 @@ public class JExpandableRow extends JPanel {
 	 * therefore we don't call buildList.
 	 */
 	private void notifyRowsModified() {
-		if (listParent == null) {
-			return;
-		} else if (listParent instanceof JExpandingListPanel) {
-			((JExpandingListPanel) listParent).buildList();
-		} else {
-			((JExpandableRow) listParent).notifyRowsModified();
+		if (listParent != null) {
+			if (listParent instanceof JExpandingListPanel) {
+				((JExpandingListPanel) listParent).buildList();
+			} else {
+				((JExpandableRow) listParent).notifyRowsModified();
+			}
 		}
 	}
 
@@ -161,21 +152,21 @@ public class JExpandableRow extends JPanel {
 	 * after removal.
 	 */
 	public void removeFromParent() {
-		Object listParent = this.listParent;
+		Object currentListParent = this.listParent;
 
-		if (listParent == null) {
-			return;
-		} else if (listParent instanceof JExpandingListPanel) {
-			JExpandingListPanel listPanel = (JExpandingListPanel) listParent;
+		if (currentListParent != null) {
+			if (currentListParent instanceof JExpandingListPanel) {
+				JExpandingListPanel listPanel = (JExpandingListPanel) currentListParent;
 
-			listPanel.getRowList().remove(this);
-			listPanel.buildList();
+				listPanel.getRowList().remove(this);
+				listPanel.buildList();
 
-		} else {
-			JExpandableRow parentRow = (JExpandableRow) listParent;
+			} else {
+				JExpandableRow parentRow = (JExpandableRow) currentListParent;
 
-			parentRow.rowList.remove(this);
-			parentRow.notifyRowsModified();
+				parentRow.rowList.remove(this);
+				parentRow.notifyRowsModified();
+			}
 		}
 	}
 
@@ -186,23 +177,13 @@ public class JExpandableRow extends JPanel {
 	 *            The button to recieve the actionlistener
 	 */
 	public void setExpansionTrigger(JButton aButton) {
-		aButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (isExpanded()) {
-					setExpanded(false);
-				} else {
-					setExpanded(true);
-				}
+		aButton.addActionListener(e -> {
+			if (isExpanded()) {
+				setExpanded(false);
+			} else {
+				setExpanded(true);
 			}
 		});
-	}
-
-	public static JExpandableRow mapObjectToRow(Object objToMap) {
-		
-		
-		
-		return null;
 	}
 
 	// --------------------------------------------------------------------------------------------|
